@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://df8s8m71mk3uc"]
+
+[ext_resource type="PackedScene" uid="uid://bcws5yci233q8" path="res://slot_machine.tscn" id="1_80nbo"]
+[ext_resource type="Script" uid="uid://cwuo7bf0i03fl" path="res://game.gd" id="1_e2o6t"]
+[ext_resource type="PackedScene" uid="uid://sy4v1g3ervsp" path="res://UpgradeShop.tscn" id="3_feb5d"]
+
+[node name="Main" type="Node2D" unique_id=578115889]
+script = ExtResource("1_e2o6t")
+
+[node name="GameSpace" type="HBoxContainer" parent="." unique_id=289269701]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 1.0
+offset_right = 1152.0
+offset_bottom = 649.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GameArea" type="VBoxContainer" parent="GameSpace" unique_id=581593155]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="CashLabel" type="Label" parent="GameSpace/GameArea" unique_id=670166153]
+layout_mode = 2
+
+[node name="SlotMachine" parent="GameSpace/GameArea" unique_id=2128814616 instance=ExtResource("1_80nbo")]
+custom_minimum_size = Vector2(320, 320)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SpinButton" type="Button" parent="GameSpace/GameArea" unique_id=304382679]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_vertical = 3
+text = "SPIN!!"
+
+[node name="CashoutButton" type="Button" parent="GameSpace/GameArea" unique_id=1133038163]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_vertical = 3
+text = "Pussy way out (Cashout)"
+
+[node name="UpgradeShop" parent="GameSpace" unique_id=524373658 instance=ExtResource("3_feb5d")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[connection signal="pressed" from="GameSpace/GameArea/SpinButton" to="." method="_on_spin_button_pressed"]
+[connection signal="pressed" from="GameSpace/GameArea/CashoutButton" to="." method="_on_cashout_button_pressed"]

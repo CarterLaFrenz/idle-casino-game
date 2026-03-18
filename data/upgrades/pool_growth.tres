@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://cuktdbtryb2rm"]
+
+[ext_resource type="Script" uid="uid://ufkmj78wsthr" path="res://upgrade_data.gd" id="1_sq8oj"]
+
+[resource]
+script = ExtResource("1_sq8oj")
+display_name = "Pool Growth"
+description = "Thomas Two-Thumbs rigged the counter. More pool per spin."
+effect_type = "pool_per_spin"
+base_cost = 15
+shop_order = 1
+metadata/_custom_type_script = "uid://ufkmj78wsthr"

@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://bcws5yci233q8"]
+
+[ext_resource type="PackedScene" uid="uid://bid2pjj4nsdug" path="res://reel.tscn" id="1_agdmm"]
+[ext_resource type="Script" uid="uid://cvwwnd8nm7lae" path="res://slot_machine.gd" id="1_nmlme"]
+
+[node name="SlotMachine" type="Control" unique_id=987156871]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_nmlme")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1294059679]
+custom_minimum_size = Vector2(340, 320)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/separation = 10
+
+[node name="Reel1" parent="HBoxContainer" unique_id=1229191265 instance=ExtResource("1_agdmm")]
+layout_mode = 2
+
+[node name="Reel2" parent="HBoxContainer" unique_id=1653892534 instance=ExtResource("1_agdmm")]
+layout_mode = 2
+
+[node name="Reel3" parent="HBoxContainer" unique_id=1748921655 instance=ExtResource("1_agdmm")]
+layout_mode = 2
+
+[node name="PoolLabel" type="Label" parent="." unique_id=2023431945]
+layout_mode = 0
+offset_left = 370.0
+offset_right = 410.0
+offset_bottom = 23.0

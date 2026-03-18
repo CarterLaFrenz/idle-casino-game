@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://d4jsm18r2iqu5"]
+
+[ext_resource type="Script" uid="uid://ufkmj78wsthr" path="res://upgrade_data.gd" id="1_rbrqx"]
+
+[resource]
+script = ExtResource("1_rbrqx")
+display_name = "Better Symbols"
+description = "Bribed the symbol guy. Unlocks Star, Diamond, and Crown."
+effect_type = "unlock_symbols"
+base_cost = 25
+max_level = 3
+shop_order = 2
+metadata/_custom_type_script = "uid://ufkmj78wsthr"

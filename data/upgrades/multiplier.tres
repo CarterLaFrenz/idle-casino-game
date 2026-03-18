@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://dlyphvkv85gc2"]
+
+[ext_resource type="Script" uid="uid://ufkmj78wsthr" path="res://upgrade_data.gd" id="1_db0vn"]
+
+[resource]
+script = ExtResource("1_db0vn")
+display_name = "Multiplier"
+description = "increases your payout multiplier"
+effect_per_level = 0.5
+metadata/_custom_type_script = "uid://ufkmj78wsthr"

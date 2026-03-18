@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://sy4v1g3ervsp"]
+
+[node name="UpgradeShop" type="Panel" unique_id=524373658]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1948015087]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Multiplier" type="HBoxContainer" parent="VBoxContainer" unique_id=1777452005]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/Multiplier" unique_id=1145116619]
+layout_mode = 2
+text = "Multiplier Lv.1"
+
+[node name="Button" type="Button" parent="VBoxContainer/Multiplier" unique_id=333598551]
+layout_mode = 2
+text = "Buy - $10"
+
+[node name="PoolGrowth" type="HBoxContainer" parent="VBoxContainer" unique_id=989800292]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/PoolGrowth" unique_id=519089182]
+layout_mode = 2
+text = "Pool Growth Lv.1"
+
+[node name="Button" type="Button" parent="VBoxContainer/PoolGrowth" unique_id=1886611502]
+layout_mode = 2
+text = "Buy - $15"
+
+[node name="Symbols" type="HBoxContainer" parent="VBoxContainer" unique_id=2028812932]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/Symbols" unique_id=653025299]
+layout_mode = 2
+text = "Better Symbols Lv.1"
+
+[node name="Button" type="Button" parent="VBoxContainer/Symbols" unique_id=645430627]
+layout_mode = 2
+text = "Buy - $25"
