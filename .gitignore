@@ -1,3 +1,16 @@
-# Godot 4+ specific ignores
+# Godot 4 specific
 .godot/
-/android/
+
+# Mono/C# specific
+.mono/
+data_*/
+mono_crash.*.json
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Export builds
+*.pck
+*.zip
+build/
