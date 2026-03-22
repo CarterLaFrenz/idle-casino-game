@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://b72yhv1e0x5xu"]
+
+[ext_resource type="Script" uid="uid://ufkmj78wsthr" path="res://upgrade_data.gd" id="1_w1rl5"]
+
+[resource]
+script = ExtResource("1_w1rl5")
+display_name = "Hunt Mode"
+description = "High risk, High reward"
+effect_type = "hunt_mode"
+effect_per_level = 0.0
+base_cost = 200
+max_level = 1
+shop_order = 6
+metadata/_custom_type_script = "uid://ufkmj78wsthr"

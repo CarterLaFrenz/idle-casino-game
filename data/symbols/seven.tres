@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SymbolData" format=3 uid="uid://byrbcodg5y0eo"]
+
+[ext_resource type="Script" uid="uid://baysx3rlewcf8" path="res://symbol_data.gd" id="1_03stj"]
+
+[resource]
+script = ExtResource("1_03stj")
+id = "D"
+display_name = "Seven"
+base_value = 5
+weight = 13
+metadata/_custom_type_script = "uid://baysx3rlewcf8"

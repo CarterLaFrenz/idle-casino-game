@@ -5,7 +5,7 @@ const UPGRADE_PATH = "res://data/upgrades/"
 
 signal upgrade_purchased(upgrade_id: String)
 
-func ready():
+func _ready():
 	load_all_upgrades()
 
 func load_all_upgrades():
@@ -25,7 +25,7 @@ func load_all_upgrades():
 			var resource = load(UPGRADE_PATH + clean_name)
 			if resource is UpgradeData:
 				upgrades[upgrade_id] = resource
-			file_name = dir.get_next()
+		file_name = dir.get_next()
 	dir.list_dir_end()
 
 

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://c8ktod2ih2csj"]
+
+[ext_resource type="Script" uid="uid://ufkmj78wsthr" path="res://upgrade_data.gd" id="1_m8at5"]
+
+[resource]
+script = ExtResource("1_m8at5")
+display_name = "Auto Cashout"
+description = "Set a pool threshold. Machine cashes out for you."
+effect_type = "auto_cashout"
+effect_per_level = 0.0
+base_cost = 300
+cost_scale = 1.0
+max_level = 1
+shop_order = 10
+requires_house_level = 2
+metadata/_custom_type_script = "uid://ufkmj78wsthr"

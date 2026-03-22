@@ -25,6 +25,9 @@ size_flags_stretch_ratio = 2.0
 [node name="CashLabel" type="Label" parent="GameSpace/GameArea" unique_id=670166153]
 layout_mode = 2
 
+[node name="VaultLabel" type="Label" parent="GameSpace/GameArea" unique_id=2122081703]
+layout_mode = 2
+
 [node name="SlotMachine" parent="GameSpace/GameArea" unique_id=2128814616 instance=ExtResource("1_80nbo")]
 custom_minimum_size = Vector2(320, 320)
 layout_mode = 2
@@ -42,9 +45,22 @@ layout_mode = 2
 size_flags_vertical = 3
 text = "Pussy way out (Cashout)"
 
+[node name="HuntModeButton" type="Button" parent="GameSpace/GameArea" unique_id=405010113]
+visible = false
+layout_mode = 2
+text = "HUNT MODE"
+
 [node name="UpgradeShop" parent="GameSpace" unique_id=524373658 instance=ExtResource("3_feb5d")]
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="MenuButton" type="Button" parent="GameSpace" unique_id=1426596925]
+layout_mode = 2
+size_flags_vertical = 0
+text = "Menu"
+
+[node name="PrestigeDialog" type="ConfirmationDialog" parent="." unique_id=361019481]
+
 [connection signal="pressed" from="GameSpace/GameArea/SpinButton" to="." method="_on_spin_button_pressed"]
 [connection signal="pressed" from="GameSpace/GameArea/CashoutButton" to="." method="_on_cashout_button_pressed"]
+[connection signal="pressed" from="GameSpace/MenuButton" to="." method="_on_menu_button_pressed"]

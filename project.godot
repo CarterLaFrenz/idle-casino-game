@@ -11,13 +11,14 @@ config_version=5
 [application]
 
 config/name="Gambling"
-run/main_scene="uid://df8s8m71mk3uc"
+run/main_scene="uid://7mo1nh5nrrna"
 config/features=PackedStringArray("4.6", "Mobile")
 config/icon="res://icon.svg"
 
 [autoload]
 
 UpgradeManager="*uid://bt2rdpt5dyhui"
+HouseManager="*uid://drfq8c62fgggh"
 
 [physics]
 

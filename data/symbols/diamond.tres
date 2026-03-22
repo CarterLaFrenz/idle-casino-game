@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="SymbolData" format=3 uid="uid://2o6fuqq71onn"]
+
+[ext_resource type="Script" uid="uid://baysx3rlewcf8" path="res://symbol_data.gd" id="1_vqvfg"]
+
+[resource]
+script = ExtResource("1_vqvfg")
+id = "F"
+display_name = "Diamond"
+base_value = 12
+weight = 4
+unlock_order = 1
+metadata/_custom_type_script = "uid://baysx3rlewcf8"
