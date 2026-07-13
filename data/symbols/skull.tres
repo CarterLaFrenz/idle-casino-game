@@ -7,6 +7,6 @@ script = ExtResource("1_5khk2")
 id = "X"
 display_name = "Skull"
 base_value = 0
-weight = 12
+weight = 25
 is_bust = true
 metadata/_custom_type_script = "uid://baysx3rlewcf8"

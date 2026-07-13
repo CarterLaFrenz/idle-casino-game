@@ -12,13 +12,17 @@ config_version=5
 
 config/name="Gambling"
 run/main_scene="uid://7mo1nh5nrrna"
-config/features=PackedStringArray("4.6", "Mobile")
+config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
 
 [autoload]
 
 UpgradeManager="*uid://bt2rdpt5dyhui"
 HouseManager="*uid://drfq8c62fgggh"
+
+[display]
+
+window/stretch/mode="canvas_items"
 
 [physics]
 
