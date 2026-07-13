@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://bbiejuous0r44"]
+
+[ext_resource type="Script" uid="uid://ufkmj78wsthr" path="res://upgrade_data.gd" id="1_yybyq"]
+
+[resource]
+script = ExtResource("1_yybyq")
+display_name = "Auto Spin"
+description = "Automatically spins the slot machine for you. Each level speeds up the interval between spins."
+effect_type = "auto_spin"
+effect_per_level = 0.5
+base_value = 3.0
+base_cost = 100
+max_level = 5
+shop_order = 4
+metadata/_custom_type_script = "uid://ufkmj78wsthr"

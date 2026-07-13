@@ -93,7 +93,6 @@ func apply_all(slot_machine) -> void:
 	
 	# Luck, reroll, safety net — wire these up as you build them
 	slot_machine.reroll_chance = get_effect_total("reroll_chance") / 100.0
-	slot_machine.safety_net_pct = get_effect_total("safety_net") / 100.0
 	
 	# --- FEATURE UNLOCKS ---
 	
@@ -101,9 +100,6 @@ func apply_all(slot_machine) -> void:
 	slot_machine.auto_spin_enabled = is_feature_unlocked("auto_spin")
 	if slot_machine.auto_spin_enabled:
 		slot_machine.auto_spin_interval = get_feature_value("auto_spin")
-	
-	# Hunt mode: pure unlock
-	slot_machine.hunt_mode_available = is_feature_unlocked("hunt_mode")
 	
 	# Auto-cashout: pure unlock  
 	slot_machine.auto_cashout_available = is_feature_unlocked("auto_cashout")

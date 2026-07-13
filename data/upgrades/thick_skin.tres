@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://cnt8v00ta2s2r"]
+
+[ext_resource type="Script" uid="uid://ufkmj78wsthr" path="res://upgrade_data.gd" id="1_bj4rl"]
+
+[resource]
+script = ExtResource("1_bj4rl")
+display_name = "Thick Skin"
+description = "Reduce how much those losses hurt in hunt mode."
+effect_type = "bust_penalty"
+effect_per_level = 0.05
+base_cost = 220
+cost_scale = 2.5
+max_level = 4
+shop_order = 7
+metadata/_custom_type_script = "uid://ufkmj78wsthr"

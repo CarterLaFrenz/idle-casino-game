@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://o4ussx3rrudf"]
+
+[ext_resource type="Script" uid="uid://ufkmj78wsthr" path="res://upgrade_data.gd" id="1_2gr6g"]
+
+[resource]
+script = ExtResource("1_2gr6g")
+display_name = "Safety Net"
+description = "Reduces the amount of pool lost on a bust. Each level softens the blow by 5%."
+effect_type = "safety_net"
+effect_per_level = 0.25
+base_cost = 30
+max_level = 5
+shop_order = 3
+metadata/_custom_type_script = "uid://ufkmj78wsthr"

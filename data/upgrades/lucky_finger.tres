@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://b4m8ajfref3w4"]
+
+[ext_resource type="Script" uid="uid://ufkmj78wsthr" path="res://upgrade_data.gd" id="1_bvsx5"]
+
+[resource]
+script = ExtResource("1_bvsx5")
+display_name = "Lucky Finger"
+description = "Make those pesky skulls show up less."
+effect_type = "skull_weight"
+effect_per_level = 2.0
+base_cost = 280
+cost_scale = 2.2
+max_level = 5
+shop_order = 8
+requires_house_level = 2
+metadata/_custom_type_script = "uid://ufkmj78wsthr"

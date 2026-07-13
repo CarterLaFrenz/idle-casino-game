@@ -8,7 +8,7 @@ extends Resource
 @export_enum("payout_mult", "pool_per_spin", "unlock_symbols", "luck", "bust_penalty", 
 	"spin_speed", "house_threshold", "reroll_chance", "safety_net",
 	"auto_spin", "offline_efficiency", "max_afk_hours",
-	"hunt_mode", "auto_cashout") var effect_type: String = "payout_mult"
+	"high_roll_mode", "auto_cashout", "skull_weight") var effect_type: String = "payout_mult"
 @export var effect_per_level: float = 1.0
 
 ## Base value for feature unlocks
