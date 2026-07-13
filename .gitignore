@@ -14,3 +14,16 @@ Thumbs.db
 *.pck
 *.zip
 build/
+
+index.html
+index.js
+index.wasm
+index.audio.*.js
+index.*.png
+index.*.png.import
+export_presets.cfg
+.godot/
+*.tmp
+
+index.png
+index.png.import
