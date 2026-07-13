@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://d3r5od7r6hy14"]
+
+[node name="PressureBar" type="Control" unique_id=2140227799]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="." unique_id=757578346]
+layout_mode = 0
+offset_left = 17.0
+offset_top = 61.0
+offset_right = 57.0
+offset_bottom = 266.0
+text = "P
+R
+E
+S
+S
+U
+R
+E"
+
+[node name="Control" type="Control" parent="." unique_id=1297987228]
+anchors_preset = 0
+offset_top = 66.0
+offset_right = 40.0
+offset_bottom = 106.0
+
+[node name="ProgressBar" type="ProgressBar" parent="Control" unique_id=543059461]
+layout_mode = 0
+offset_left = 4.0
+offset_right = 12.0
+offset_bottom = 200.0
+fill_mode = 3
+show_percentage = false
+
+[node name="25Mark" type="ColorRect" parent="Control" unique_id=1272752022]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 150.0
+offset_right = 6.0
+offset_bottom = 153.0
+
+[node name="50Mark" type="ColorRect" parent="Control" unique_id=1048502677]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 100.0
+offset_right = 6.0
+offset_bottom = 103.0
+
+[node name="75Mark" type="ColorRect" parent="Control" unique_id=903594709]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 50.0
+offset_right = 6.0
+offset_bottom = 53.0
