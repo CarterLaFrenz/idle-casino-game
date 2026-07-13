@@ -9,20 +9,54 @@ var base_symbols: Array[SymbolData] = []
 var unlock_symbols: Array[SymbolData] = []
 var active_symbols: Array[SymbolData] = []
 const SYMBOL_PATH = "res://data/symbols/"
+
+var slot_labels = []
+
+var COLOR_DEFAULT = Color.WHITE
+var COLOR_WIN_SMALL = Color.GREEN
+var COLOR_WIN_BIG = Color.GOLD
+var COLOR_BUST = Color.RED
+
+
+var paylines = [
+	# Horizontal
+	[[0,0], [0,1], [0,2]],  # top row
+	[[1,0], [1,1], [1,2]],  # middle row
+	[[2,0], [2,1], [2,2]],  # bottom row
+	# Vertical
+	[[0,0], [1,0], [2,0]],  # left column
+	[[0,1], [1,1], [2,1]],  # center column
+	[[0,2], [1,2], [2,2]],  # right column
+	# Diagonal
+	[[0,0], [1,1], [2,2]],  # top-left to bottom-right
+	[[2,0], [1,1], [0,2]],  # top-right to bottom-left
+]
+
 # Rolls
 var reroll_chance: float = 0.0
-var safety_net_pct: float = 0.0 
 var auto_spin_enabled: bool = false
 var auto_spin_interval: float = 3.0
-var hunt_mode_available: bool = false
-var hunt_mode_active: bool = false
+
+enum HighRollState { READY, ACTIVE, COOLDOWN }
+var high_roll_current_state = HighRollState.READY
+var high_roll_burst: int = 0
+var high_roll_cooldown: int = 0
+
+const HIGH_ROLL_BURST_MAX = 3
+const HIGH_ROLL_COOLDOWN_MAX = 15
+
+
 var auto_cashout_available: bool = false
 var auto_cashout_threshold: int = 0
 
 
+
+
 signal payout(amount)
 signal spin_complete
-signal bust_penalty(amount)
+signal pressure_invested(amount)
+signal highroll_state_change(state)
+signal highroll_tick
 
 func _ready() -> void:
 	$PoolLabel.text = "Pool: " + str(pool)
@@ -49,26 +83,58 @@ func _ready() -> void:
 	unlock_symbols.sort_custom(func(a, b): return a.unlock_order < b.unlock_order)
 	active_symbols = base_symbols.duplicate()
 	update_reels()
+	
+	slot_labels = [
+		[$HBoxContainer/Reel1/VBoxContainer/Slot1, $HBoxContainer/Reel1/VBoxContainer/Slot2, $HBoxContainer/Reel1/VBoxContainer/Slot3],
+		[$HBoxContainer/Reel2/VBoxContainer/Slot1, $HBoxContainer/Reel2/VBoxContainer/Slot2, $HBoxContainer/Reel2/VBoxContainer/Slot3],
+		[$HBoxContainer/Reel3/VBoxContainer/Slot1, $HBoxContainer/Reel3/VBoxContainer/Slot2, $HBoxContainer/Reel3/VBoxContainer/Slot3],
+		]
 
 # Spin Func
-func spin(grows_pool):
-	if grows_pool:
-		var growth = pool_per_spin * 2 if hunt_mode_active else pool_per_spin
-		pool += growth
-		$PoolLabel.text = "Pool: " + str(pool)
-		if auto_cashout_available and auto_cashout_threshold > 0:
-			if pool >= auto_cashout_threshold:
-				cashout()
-				spin_complete.emit()
-				return
-	$HBoxContainer/Reel1.spin()
-	$HBoxContainer/Reel2.spin()
-	$HBoxContainer/Reel3.spin()
+func spin():
 	
-	while $HBoxContainer/Reel1.is_spinning or $HBoxContainer/Reel2.is_spinning or $HBoxContainer/Reel3.is_spinning:
+
+	for reel in slot_labels:
+		for label in reel:
+			label.add_theme_color_override("font_color", COLOR_DEFAULT)
+	
+	var modified = get_modified_symbols()
+	for reel in [$HBoxContainer/Reel1, $HBoxContainer/Reel2, $HBoxContainer/Reel3]:
+		reel.symbols = modified
+	
+	var growth = pool_per_spin
+	pool += growth
+	
+	$PoolLabel.text = "Pool: " + str(pool)
+	$HBoxContainer/Reel1.spin()
+	
+	while $HBoxContainer/Reel1.is_spinning:
 		await get_tree().process_frame
 	
 	var results = []
+	
+	if high_roll_current_state == HighRollState.ACTIVE:
+		var reel1_result = $HBoxContainer/Reel1.get_results()
+		var highest_result = null
+		
+		for result in reel1_result:
+			var sym = get_symbol_data(result)
+			if highest_result == null and not sym.is_bust:
+				highest_result = result
+			elif not sym.is_bust and sym.base_value > get_symbol_data(highest_result).base_value:
+				highest_result = result
+		var high_roll_weights = get_high_roll_weights(highest_result)
+		$HBoxContainer/Reel2.symbols = high_roll_weights
+		$HBoxContainer/Reel3.symbols = high_roll_weights
+	
+	
+	$HBoxContainer/Reel2.spin()
+	$HBoxContainer/Reel3.spin()
+	
+	while $HBoxContainer/Reel2.is_spinning or $HBoxContainer/Reel3.is_spinning:
+		await get_tree().process_frame
+	
+	
 	for row in 3:
 		results.append([
 			$HBoxContainer/Reel1.get_results()[row],
@@ -79,14 +145,64 @@ func spin(grows_pool):
 	apply_rerolls(results)
 	resolve_spin(results)
 	spin_complete.emit()
+	
+	if high_roll_current_state == HighRollState.ACTIVE:
+		high_roll_burst -= 1
+		highroll_tick.emit()
+		if high_roll_burst == 0:
+			high_roll_current_state = HighRollState.COOLDOWN
+			high_roll_cooldown = HIGH_ROLL_COOLDOWN_MAX
+			highroll_state_change.emit(high_roll_current_state)
+			
+	elif high_roll_current_state == HighRollState.COOLDOWN:
+		high_roll_cooldown -= 1
+		highroll_tick.emit()
+		if high_roll_cooldown == 0:
+			high_roll_current_state = HighRollState.READY
+			highroll_state_change.emit(high_roll_current_state)
 
+func get_high_roll_weights(result):
+	var top_sym = []
+	var non_bust = active_symbols.filter(func(s): return not s.is_bust)
+	non_bust.sort_custom(func(a, b): return a.base_value > b.base_value)
+	top_sym = non_bust.slice(0, 3)
+	var lead = get_symbol_data(result)
+	var is_high = top_sym.has(lead)
+	
+	var modified: Array[SymbolData] = []
+	if is_high:
+		for s in active_symbols:
+			if s == get_symbol_data(result):
+				var boosted = s.duplicate()
+				boosted.weight = max(1, int(s.weight * 2.5))
+				modified.append(boosted)
+			else:
+				modified.append(s)
+	else:
+		for s in active_symbols:
+			if s == get_symbol_data(result):
+				var boosted = s.duplicate()
+				boosted.weight = max(1, int(s.weight / 2.5))
+				modified.append(boosted)
+			elif top_sym.has(s):
+				var boosted = s.duplicate()
+				boosted.weight = max(1, int(s.weight * 1.3))
+				modified.append(boosted)
+			else:
+				modified.append(s)
+	return modified
 
 func check_wins(results):
 	var wins = []
-	for row in 3:
-		if results[row][0] == results[row][1] and results[row][1] == results[row][2]:
-			wins.append({"row": row, "symbol": results[row][0]})
+	for i in range(paylines.size()):
+		var line = paylines[i]
+		var sym1 = results[line[0][0]][line[0][1]]
+		var sym2 = results[line[1][0]][line[1][1]]
+		var sym3 = results[line[2][0]][line[2][1]]
+		if (sym1 == sym2 && sym2 == sym3):
+			wins.append({"payline": i, "symbol": sym1})
 	return wins
+
 
 func get_symbol_data(id:String) -> SymbolData:
 	for s in active_symbols:
@@ -103,7 +219,7 @@ func apply_rerolls(results):
 			if sym and sym.is_bust and randf() < reroll_chance:
 				var replacement = weighted_pick_non_bust()
 				results[row][col] = replacement
-				return results
+	return results
 
 func weighted_pick_non_bust() -> SymbolData:
 	var non_bust = active_symbols.filter(func(s): return not s.is_bust)
@@ -111,51 +227,56 @@ func weighted_pick_non_bust() -> SymbolData:
 
 func resolve_spin(results):
 	var busted = false
-	for row in 3:
-		var all_bust = true
-		for col in 3:
-			var sym = get_symbol_data(results[row][col])
-			if sym == null or not sym.is_bust:
-				all_bust = false
-				break
-		if all_bust:
-			busted = true
-			break
+	var bust_line = null
+	for i in range(paylines.size()):
+		var line = paylines[i]
+		var sym1 = get_symbol_data(results[line[0][0]][line[0][1]])
+		var sym2 = get_symbol_data(results[line[1][0]][line[1][1]])
+		var sym3 = get_symbol_data(results[line[2][0]][line[2][1]])
+		if sym1 == null or not sym1.is_bust:
+			continue
+		if sym2 == null or not sym2.is_bust:
+			continue
+		if sym3 == null or not sym3.is_bust:
+			continue
+		busted = true
+		bust_line = i
+		break
 	
 	if busted:
-		var lost_pool = pool
-		var saved = int(pool * safety_net_pct)
-		pool = saved
-		if hunt_mode_active:
-			var penalty = int(lost_pool * 0.25)
-			bust_penalty.emit(penalty)
-		if saved > 0:
-			$PoolLabel.text = "BUST! Saved " + str(saved)
-		else:
-			$PoolLabel.text = "Pool: 0 - BUST!"
+		var base_rate = 0.5
+		var safety_reduction = UpgradeManager.get_effect_total("safety_net")
+		var thick_skin_reduction = 0.0
+		var final_rate = clamp(base_rate - safety_reduction - thick_skin_reduction, 0.1, 0.75)
+		var lost = int(pool * final_rate)
+		pool = pool - lost
+		$PoolLabel.text = "BUST! Lost " + str(lost) + ", kept " + str(pool)
+		for pos in paylines[bust_line]:
+			slot_labels[pos[1]][pos[0]].add_theme_color_override("font_color", COLOR_BUST)
 		return
 	
 	var wins = check_wins(results)
 	if wins.size() > 0:
 		var payout_amount = 0
 		for win in wins:
+			print("Win on payline ", win.payline, " symbol: ", win.symbol)
 			var sym_value = get_symbol_data(win.symbol).base_value
-			if hunt_mode_active:
-				payout_amount += pool * sym_value * payout_mult
-			else:
-				payout_amount += (sym_value + (pool * sym_value)) * payout_mult
+			payout_amount += pool * sym_value * payout_mult
+			
+			var color = COLOR_WIN_BIG if sym_value >= 5 else COLOR_WIN_SMALL
+			for pos in paylines[win.payline]:
+				slot_labels[pos[1]][pos[0]].add_theme_color_override("font_color", color)
 		payout.emit(payout_amount)
 		pool = 1  # reset after cashout
 		$PoolLabel.text = "Pool: " + str(pool)
 
 
-func cashout():
-	var rate = HouseManager.get_fight_back().cashout_rate
-	if HouseManager.surveillance_penalty_spins > 0:
-		rate -= 0.10
-	var cashout_amount = int(pool * rate)
-	payout.emit(cashout_amount)
-	pool = 0
+func invest():
+	var rate = .5
+	var invest_amount = int(pool * rate)
+	pressure_invested.emit(invest_amount)
+	pool = 1
+	$PoolLabel.text = "Pool: " + str(pool)
 
 
 # Upgrade Func
@@ -188,7 +309,7 @@ func get_modified_symbols() -> Array[SymbolData]:
 	if skull_bonus <= 0:
 		return active_symbols
 	# Build a copy with boosted skull weight
-	var modified = []
+	var modified: Array[SymbolData] = []
 	for s in active_symbols:
 		if s.is_bust:
 			var boosted = s.duplicate()
@@ -197,3 +318,16 @@ func get_modified_symbols() -> Array[SymbolData]:
 		else:
 			modified.append(s)
 	return modified
+
+func activate_high_roll():
+	if high_roll_current_state == HighRollState.READY:
+		high_roll_current_state = HighRollState.ACTIVE
+		high_roll_burst = HIGH_ROLL_BURST_MAX
+		highroll_state_change.emit(high_roll_current_state)
+	
+
+func high_roll_reset():
+	high_roll_current_state = HighRollState.READY
+	high_roll_burst = 0
+	high_roll_cooldown = 0
+	highroll_state_change.emit(high_roll_current_state)
