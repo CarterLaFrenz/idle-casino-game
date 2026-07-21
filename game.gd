@@ -158,6 +158,7 @@ func _on_auto_spin_timeout():
 func _on_payout(amount):
 	cash += amount
 	HouseManager.add_pressure(amount * 0.1)
+	TokenManager.on_win(amount)
 	update_shop_ui()
 	
 
@@ -236,6 +237,7 @@ func save_game():
 	config.set_value("player", "cash", cash)
 	UpgradeManager.save_to_config(config)
 	HouseManager.save_to_config(config)
+	TokenManager.save_to_config(config)
 	config.save("user://savegame.cfg")
 
 func load_game():

@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Gambling"
+config/name="Idle Casino Game Main"
 run/main_scene="uid://7mo1nh5nrrna"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
@@ -19,10 +19,16 @@ config/icon="res://icon.svg"
 
 UpgradeManager="*uid://bt2rdpt5dyhui"
 HouseManager="*uid://drfq8c62fgggh"
+TokenManager="*uid://clkxeyyjb8fhl"
 
 [display]
 
 window/stretch/mode="canvas_items"
+
+[editor]
+
+version_control/plugin_name="GitPlugin"
+version_control/autoload_on_startup=true
 
 [physics]
 

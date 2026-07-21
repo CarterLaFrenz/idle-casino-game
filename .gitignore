@@ -1,29 +1,3 @@
-# Godot 4 specific
+# Godot 4+ specific ignores
 .godot/
-
-# Mono/C# specific
-.mono/
-data_*/
-mono_crash.*.json
-
-# OS junk
-.DS_Store
-Thumbs.db
-
-# Export builds
-*.pck
-*.zip
-build/
-
-index.html
-index.js
-index.wasm
-index.audio.*.js
-index.*.png
-index.*.png.import
-export_presets.cfg
-.godot/
-*.tmp
-
-index.png
-index.png.import
+/android/
