@@ -249,5 +249,6 @@ func load_game():
 	UpgradeManager.load_from_config(config)
 	UpgradeManager.apply_all(slot_machine)
 	HouseManager.load_from_config(config)
+	TokenManager.load_from_config(config)
 	high_roll_button.visible = true
 	#auto_spin_button.visible = UpgradeManager.is_unlocked("auto_spin")
