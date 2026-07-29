@@ -7,6 +7,7 @@ extends Node2D
 @onready var high_roll_button = $GameSpace/GameArea/HighRollModeButton
 @onready var auto_spin_button = $GameSpace/GameArea/AutoSpinButton
 @onready var cash_label = $GameSpace/GameArea/CashLabel
+@onready var token_label = $GameSpace/GameArea/TokenLabel
 @onready var shop_container = $GameSpace/UpgradeShop/VBoxContainer
 @onready var vault_label = $GameSpace/GameArea/VaultLabel
 @onready var prestige_dialog = $PrestigeDialog
@@ -22,6 +23,7 @@ var auto_spin_timer: Timer
 func _ready():
 	load_game()
 	update_vault_label()
+	_on_tokens_added(0)
 	build_shop_ui()
 	
 	high_roll_button.pressed.connect(slot_machine.activate_high_roll)
@@ -36,6 +38,8 @@ func _ready():
 	UpgradeManager.upgrade_purchased.connect(_on_upgrade_purchased)
 	HouseManager.vault_drained.connect(_on_vault_drained)
 	HouseManager.vault_cracked.connect(_on_vault_cracked)
+	
+	TokenManager.tokens_added.connect(_on_tokens_added)
 	
 	prestige_dialog.confirmed.connect(_on_prestige_confirmed)
 	
@@ -112,6 +116,7 @@ func _on_prestige_confirmed():
 	build_shop_ui()
 	update_shop_ui()
 	update_vault_label()
+	_on_tokens_added(0)
 	slot_machine.high_roll_reset()
 	auto_spin_timer.stop()
 	auto_spin_button.visible = false
@@ -231,6 +236,12 @@ func _on_highroll_state_change(state):
 
 func _on_highroll_tick():
 	_on_highroll_state_change(slot_machine.high_roll_current_state)
+
+func _on_tokens_added(delta):
+	var amount = TokenManager.current_tokens
+	token_label.text = "Tokens: " + str(amount)
+
+
 
 func save_game():
 	var config = ConfigFile.new()

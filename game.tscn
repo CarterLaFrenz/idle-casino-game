@@ -29,6 +29,9 @@ size_flags_stretch_ratio = 2.0
 [node name="CashLabel" type="Label" parent="GameSpace/GameArea" unique_id=670166153]
 layout_mode = 2
 
+[node name="TokenLabel" type="Label" parent="GameSpace/GameArea" unique_id=1090526996]
+layout_mode = 2
+
 [node name="VaultLabel" type="Label" parent="GameSpace/GameArea" unique_id=2122081703]
 layout_mode = 2
 
