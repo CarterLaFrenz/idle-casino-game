@@ -1,0 +1,58 @@
+[gd_resource type="Theme" format=3 uid="uid://ddg7ysg56rfi8"]
+
+[ext_resource type="FontFile" uid="uid://bkesybcnb85qo" path="res://fonts/SpaceMono-Regular.ttf" id="1_afw5t"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_afw5t"]
+bg_color = Color(0.37254903, 0.8784314, 0.47843137, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.37254903, 0.8784314, 0.47843137, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5fetd"]
+bg_color = Color(0.2901961, 0.22745098, 0.26666668, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.37254903, 0.8784314, 0.47843137, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1knni"]
+bg_color = Color(0.24705882, 0.65882355, 0.36078432, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.37254903, 0.8784314, 0.47843137, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w7r13"]
+bg_color = Color(0.050980393, 0.06666667, 0.05490196, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.37254903, 0.8784314, 0.47843137, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_00mpl"]
+bg_color = Color(0.2901961, 0.22745098, 0.26666668, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.37254903, 0.8784314, 0.47843137, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4wuwf"]
+bg_color = Color(0.37254903, 0.8784314, 0.47843137, 1)
+
+[resource]
+default_font = ExtResource("1_afw5t")
+Button/colors/font_color = Color(0.37254903, 0.8784314, 0.47843137, 1)
+Button/colors/font_hover_color = Color(0.050980393, 0.06666667, 0.05490196, 1)
+Button/styles/hover = SubResource("StyleBoxFlat_afw5t")
+Button/styles/normal = SubResource("StyleBoxFlat_5fetd")
+Button/styles/pressed = SubResource("StyleBoxFlat_1knni")
+Label/colors/font_color = Color(0.8509804, 0.91764706, 0.827451, 1)
+Panel/styles/panel = SubResource("StyleBoxFlat_w7r13")
+ProgressBar/styles/background = SubResource("StyleBoxFlat_00mpl")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_4wuwf")
