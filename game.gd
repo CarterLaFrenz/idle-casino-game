@@ -1,20 +1,18 @@
 extends Node2D
 
 # Node references
-@onready var slot_machine = $GameSpace/GameArea/SlotMachine
-@onready var spin_button = $GameSpace/GameArea/SpinButton
-@onready var invest_button = $GameSpace/GameArea/InvestButton
-@onready var high_roll_button = $GameSpace/GameArea/HighRollModeButton
-@onready var auto_spin_button = $GameSpace/GameArea/AutoSpinButton
-@onready var cash_label = $GameSpace/GameArea/CashLabel
-@onready var token_label = $GameSpace/GameArea/TokenLabel
-@onready var shop_container = $GameSpace/UpgradeShop/VBoxContainer
-@onready var vault_label = $GameSpace/GameArea/VaultLabel
+@onready var slot_machine = $UI/GameSpace/GameArea/AspectRatioContainer/SlotMachine
+@onready var spin_button = $UI/GameSpace/GameArea/SpinButton
+@onready var invest_button = $UI/GameSpace/GameArea/SecondRow/InvestButton
+@onready var high_roll_button = $UI/GameSpace/GameArea/SecondRow/HighRollModeButton
+@onready var auto_spin_button = $UI/GameSpace/GameArea/SecondRow/AutoSpinButton
+@onready var cash_label = $UI/GameSpace/GameArea/CashLabel
+@onready var token_label = $UI/GameSpace/GameArea/TokenLabel
+@onready var vault_label = $UI/GameSpace/GameArea/VaultLabel
 @onready var prestige_dialog = $PrestigeDialog
-@onready var pressure_bar = $GameSpace/PressureBar/Control/ProgressBar
+@onready var pressure_bar = $UI/GameSpace/PressureBar/Control/ProgressBar
 
 var cash = 10
-var upgrade_rows = {}
 
 #auto spin
 var auto_spin_timer: Timer
@@ -23,8 +21,7 @@ var auto_spin_timer: Timer
 func _ready():
 	load_game()
 	update_vault_label()
-	_on_tokens_added(0)
-	build_shop_ui()
+	update_token_label()
 	
 	high_roll_button.pressed.connect(slot_machine.activate_high_roll)
 	auto_spin_button.pressed.connect(_on_auto_spin_button_pressed)
@@ -35,17 +32,18 @@ func _ready():
 	slot_machine.highroll_tick.connect(_on_highroll_tick)
 	
 	HouseManager.vault_changed.connect(_on_vault_changed)
-	UpgradeManager.upgrade_purchased.connect(_on_upgrade_purchased)
 	HouseManager.vault_drained.connect(_on_vault_drained)
 	HouseManager.vault_cracked.connect(_on_vault_cracked)
 	
 	TokenManager.tokens_added.connect(_on_tokens_added)
 	
+	UpgradeManager.upgrade_purchased.connect(_on_upgrade_purchased)
+	
 	prestige_dialog.confirmed.connect(_on_prestige_confirmed)
 	
 	HouseManager.pressure_changed.connect(_on_pressure_changed)
 	
-	update_shop_ui()
+	$MenuHub/PanelContainer/Layout/ContentArea/UpgradePanel.buy_requested.connect(buy_upgrade)
 	
 	pressure_bar.max_value = HouseManager.pressure_threshold
 	pressure_bar.value = HouseManager.vault_pressure
@@ -64,7 +62,8 @@ func _ready():
 	auto_spin_timer.wait_time = UpgradeManager.get_feature_value("auto_spin")
 	auto_spin_timer.timeout.connect(_on_auto_spin_timeout)
 	add_child(auto_spin_timer)
-	
+	$MenuHub/PanelContainer/Layout/ContentArea/UpgradePanel.refresh(cash)
+	update_cash_label()
 
 func _on_vault_cracked():
 	$PrestigeDialog.dialog_text = "You cracked " + HouseManager.house_name + "! The vault is broken open. Move on?"
@@ -85,16 +84,19 @@ func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		save_game()
 
-func _on_upgrade_purchased(_upgrade_id):
-	UpgradeManager.apply_all(slot_machine)
-	update_shop_ui()
-	high_roll_button.visible = true
-	#auto_spin_button.visible = UpgradeManager.is_unlocked("auto_spin")
-	if !(auto_spin_timer.is_stopped()):
-		auto_spin_timer.wait_time = UpgradeManager.get_feature_value("auto_spin")
 
 func _on_vault_changed(new_amount):
 	update_vault_label()
+
+func _on_upgrade_purchased(_upgrade_id):
+	UpgradeManager.apply_all(slot_machine)
+	$Hub/PanelContainer/Layout/ContentArea/UpgradePanel.refresh(cash)
+	high_roll_button.visible = true
+	if !(auto_spin_timer.is_stopped()):
+		auto_spin_timer.wait_time = UpgradeManager.get_feature_value("auto_spin")
+
+func update_cash_label():
+	cash_label.text = "Cash: " + str(cash)
 
 func update_vault_label():
 	var amount = HouseManager.vault
@@ -110,13 +112,15 @@ func _on_prestige_confirmed():
 	HouseManager.prestige()
 	UpgradeManager.reset_all()
 	cash = 10
+	$MenuHub/PanelContainer/Layout/ContentArea/UpgradePanel.build_rows()
+	$MenuHub/PanelContainer/Layout/ContentArea/UpgradePanel.refresh(cash)
+	update_cash_label()
+	
 	slot_machine.pool = 1
 	
 	UpgradeManager.apply_all(slot_machine)
-	build_shop_ui()
-	update_shop_ui()
 	update_vault_label()
-	_on_tokens_added(0)
+	update_token_label()
 	slot_machine.high_roll_reset()
 	auto_spin_timer.stop()
 	auto_spin_button.visible = false
@@ -126,26 +130,8 @@ func _on_prestige_confirmed():
 	pressure_bar.value = HouseManager.vault_pressure
 	update_bar_color()
 	save_game()
+	
 
-func build_shop_ui():
-	#clear
-	for child in shop_container.get_children():
-		child.queue_free()
-	upgrade_rows.clear()
-	
-	
-	var ups = UpgradeManager.get_sorted_upgrades()
-	for up in ups:
-		var row = HBoxContainer.new()
-		var label = Label.new()
-		var button = Button.new()
-		label.text = up.data.display_name
-		button.text = "Buy - $" + str(up.data.get_cost())
-		button.pressed.connect(buy_upgrade.bind(up.id))
-		row.add_child(label)
-		row.add_child(button)
-		shop_container.add_child(row)
-		upgrade_rows[up.id] = {"label": label, "button": button}
 
 func _on_spin_complete():
 	spin_button.disabled = false
@@ -164,7 +150,8 @@ func _on_payout(amount):
 	cash += amount
 	HouseManager.add_pressure(amount * 0.1)
 	TokenManager.on_win(amount)
-	update_shop_ui()
+	update_cash_label()
+	$MenuHub/PanelContainer/Layout/ContentArea/UpgradePanel.refresh(cash)
 	
 
 func _on_invest_button_pressed():
@@ -179,24 +166,10 @@ func buy_upgrade(upgrade_id):
 	var result = UpgradeManager.try_buy(upgrade_id, cash)
 	if result.success:
 		cash -= result.cost
-		update_shop_ui()
+		update_cash_label()
+		$MenuHub/PanelContainer/Layout/ContentArea/UpgradePanel.refresh(cash)
 		save_game()
 
-
-func update_shop_ui():
-	for id in upgrade_rows:
-		var data = UpgradeManager.upgrades[id]
-		var level = data.current_level
-		var cost = data.get_cost()
-		upgrade_rows[id].label.text = data.display_name + " Lv." + str(level)
-		if data.is_maxed():
-			upgrade_rows[id].button.text = "MAXED"
-			upgrade_rows[id].button.disabled = true
-		else:
-			upgrade_rows[id].button.text = "Buy - $" + str(cost)
-			upgrade_rows[id].button.disabled = cash < cost
-	cash_label.text = "Cash: " + str(cash)
-	
 
 func _on_pressure_changed(new_amount):
 	var tween = create_tween()
@@ -219,8 +192,7 @@ func update_bar_color():
 	pressure_bar.add_theme_stylebox_override("fill", style)
 
 func _on_menu_button_pressed():
-	save_game()
-	get_tree().change_scene_to_file("res://menu.tscn")
+	$MenuHub.toggle_hub()
 
 func _on_highroll_state_change(state):
 	#ready
@@ -238,9 +210,11 @@ func _on_highroll_tick():
 	_on_highroll_state_change(slot_machine.high_roll_current_state)
 
 func _on_tokens_added(delta):
+	update_token_label()
+
+func update_token_label():
 	var amount = TokenManager.current_tokens
 	token_label.text = "Tokens: " + str(amount)
-
 
 
 func save_game():
@@ -263,3 +237,8 @@ func load_game():
 	TokenManager.load_from_config(config)
 	high_roll_button.visible = true
 	#auto_spin_button.visible = UpgradeManager.is_unlocked("auto_spin")
+	update_cash_label()
+
+func _on_menu_hub_quit_requested() -> void:
+	save_game()
+	get_tree().change_scene_to_file("res://menu.tscn")

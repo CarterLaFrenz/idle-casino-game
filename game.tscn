@@ -2,13 +2,28 @@
 
 [ext_resource type="PackedScene" uid="uid://bcws5yci233q8" path="res://slot_machine.tscn" id="1_80nbo"]
 [ext_resource type="Script" uid="uid://cwuo7bf0i03fl" path="res://game.gd" id="1_e2o6t"]
+[ext_resource type="Theme" uid="uid://ddg7ysg56rfi8" path="res://theme/main_theme.tres" id="2_7jktm"]
 [ext_resource type="PackedScene" uid="uid://d3r5od7r6hy14" path="res://pressure_bar.tscn" id="2_fc0e3"]
-[ext_resource type="PackedScene" uid="uid://sy4v1g3ervsp" path="res://UpgradeShop.tscn" id="3_feb5d"]
+[ext_resource type="Script" uid="uid://s7udpl7r3sda" path="res://ui.gd" id="3_eow3j"]
+[ext_resource type="PackedScene" uid="uid://bjx86sgbj17ex" path="res://hub.tscn" id="6_ryrav"]
 
 [node name="Main" type="Node2D" unique_id=578115889]
 script = ExtResource("1_e2o6t")
 
-[node name="GameSpace" type="HBoxContainer" parent="." unique_id=289269701]
+[node name="PrestigeDialog" type="ConfirmationDialog" parent="." unique_id=361019481]
+
+[node name="UI" type="Control" parent="." unique_id=448249121]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_7jktm")
+script = ExtResource("3_eow3j")
+
+[node name="GameSpace" type="HBoxContainer" parent="UI" unique_id=289269701]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -18,61 +33,85 @@ offset_bottom = 649.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PressureBar" parent="GameSpace" unique_id=2140227799 instance=ExtResource("2_fc0e3")]
+[node name="PressureBar" parent="UI/GameSpace" unique_id=2140227799 instance=ExtResource("2_fc0e3")]
+custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 
-[node name="GameArea" type="VBoxContainer" parent="GameSpace" unique_id=581593155]
+[node name="GameArea" type="VBoxContainer" parent="UI/GameSpace" unique_id=581593155]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
+alignment = 1
 
-[node name="CashLabel" type="Label" parent="GameSpace/GameArea" unique_id=670166153]
+[node name="CashLabel" type="Label" parent="UI/GameSpace/GameArea" unique_id=670166153]
+custom_minimum_size = Vector2(80, 10)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="TokenLabel" type="Label" parent="UI/GameSpace/GameArea" unique_id=1090526996]
+custom_minimum_size = Vector2(80, 10)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="VaultLabel" type="Label" parent="UI/GameSpace/GameArea" unique_id=2122081703]
+custom_minimum_size = Vector2(80, 10)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="UI/GameSpace/GameArea" unique_id=1443609958]
 layout_mode = 2
 
-[node name="TokenLabel" type="Label" parent="GameSpace/GameArea" unique_id=1090526996]
-layout_mode = 2
-
-[node name="VaultLabel" type="Label" parent="GameSpace/GameArea" unique_id=2122081703]
-layout_mode = 2
-
-[node name="SlotMachine" parent="GameSpace/GameArea" unique_id=2128814616 instance=ExtResource("1_80nbo")]
+[node name="SlotMachine" parent="UI/GameSpace/GameArea/AspectRatioContainer" unique_id=2128814616 instance=ExtResource("1_80nbo")]
 custom_minimum_size = Vector2(320, 320)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="SpinButton" type="Button" parent="GameSpace/GameArea" unique_id=304382679]
-custom_minimum_size = Vector2(40, 40)
+[node name="SpinButton" type="Button" parent="UI/GameSpace/GameArea" unique_id=304382679]
+custom_minimum_size = Vector2(68, 68)
 layout_mode = 2
-size_flags_vertical = 3
 text = "SPIN!!"
 
-[node name="InvestButton" type="Button" parent="GameSpace/GameArea" unique_id=1133038163]
-custom_minimum_size = Vector2(40, 40)
+[node name="SecondRow" type="HBoxContainer" parent="UI/GameSpace/GameArea" unique_id=502216749]
 layout_mode = 2
+alignment = 1
+
+[node name="InvestButton" type="Button" parent="UI/GameSpace/GameArea/SecondRow" unique_id=1133038163]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Invest"
 
-[node name="HighRollModeButton" type="Button" parent="GameSpace/GameArea" unique_id=405010113]
+[node name="HighRollModeButton" type="Button" parent="UI/GameSpace/GameArea/SecondRow" unique_id=405010113]
 visible = false
-layout_mode = 2
-text = "HIGH ROLL MODE"
-
-[node name="AutoSpinButton" type="Button" parent="GameSpace/GameArea" unique_id=1463801186]
-visible = false
-layout_mode = 2
-text = "Auto"
-
-[node name="UpgradeShop" parent="GameSpace" unique_id=524373658 instance=ExtResource("3_feb5d")]
+custom_minimum_size = Vector2(44, 44)
 layout_mode = 2
 size_flags_horizontal = 3
+text = "HIGH ROLL MODE"
 
-[node name="MenuButton" type="Button" parent="GameSpace" unique_id=1426596925]
+[node name="AutoSpinButton" type="Button" parent="UI/GameSpace/GameArea/SecondRow" unique_id=1463801186]
+visible = false
+custom_minimum_size = Vector2(44, 44)
 layout_mode = 2
+size_flags_horizontal = 3
+text = "Auto"
+
+[node name="MenuButton" type="Button" parent="UI" unique_id=1426596925]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_right = 48.0
+offset_bottom = 48.0
+grow_horizontal = 0
 size_flags_vertical = 0
-text = "Menu"
+text = "M"
 
-[node name="PrestigeDialog" type="ConfirmationDialog" parent="." unique_id=361019481]
+[node name="MenuHub" parent="." unique_id=131421237 instance=ExtResource("6_ryrav")]
+visible = false
 
-[connection signal="pressed" from="GameSpace/GameArea/SpinButton" to="." method="_on_spin_button_pressed"]
-[connection signal="pressed" from="GameSpace/GameArea/InvestButton" to="." method="_on_invest_button_pressed"]
-[connection signal="pressed" from="GameSpace/MenuButton" to="." method="_on_menu_button_pressed"]
+[connection signal="pressed" from="UI/GameSpace/GameArea/SpinButton" to="." method="_on_spin_button_pressed"]
+[connection signal="pressed" from="UI/GameSpace/GameArea/SecondRow/InvestButton" to="." method="_on_invest_button_pressed"]
+[connection signal="pressed" from="UI/MenuButton" to="." method="_on_menu_button_pressed"]
+[connection signal="quit_requested" from="MenuHub" to="." method="_on_menu_hub_quit_requested"]

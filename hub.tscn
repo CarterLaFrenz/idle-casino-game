@@ -1,0 +1,90 @@
+[gd_scene format=3 uid="uid://bjx86sgbj17ex"]
+
+[ext_resource type="Script" uid="uid://c0l06nj5dryli" path="res://menu_hub.gd" id="1_l10or"]
+[ext_resource type="PackedScene" uid="uid://sy4v1g3ervsp" path="res://UpgradeShop.tscn" id="2_hjueh"]
+[ext_resource type="Theme" uid="uid://ddg7ysg56rfi8" path="res://theme/main_theme.tres" id="2_w7r13"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ysrp0"]
+bg_color = Color(0.050980393, 0.06666667, 0.05490196, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.37254903, 0.8784314, 0.47843137, 1)
+
+[node name="MenuHub" type="CanvasLayer" unique_id=131421237]
+script = ExtResource("1_l10or")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=25161170]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_w7r13")
+theme_override_styles/panel = SubResource("StyleBoxFlat_ysrp0")
+
+[node name="Layout" type="VBoxContainer" parent="PanelContainer" unique_id=1526515845]
+layout_mode = 2
+
+[node name="NavRow" type="HBoxContainer" parent="PanelContainer/Layout" unique_id=1164437183]
+layout_mode = 2
+
+[node name="UpgradeButton" type="Button" parent="PanelContainer/Layout/NavRow" unique_id=1017614834]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Upgrade"
+
+[node name="TokenButton" type="Button" parent="PanelContainer/Layout/NavRow" unique_id=292215663]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Token"
+
+[node name="PrestigeButton" type="Button" parent="PanelContainer/Layout/NavRow" unique_id=1605439474]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Prestige"
+
+[node name="ContentArea" type="Control" parent="PanelContainer/Layout" unique_id=1640068206]
+layout_mode = 2
+
+[node name="TokenShopPanel" type="Control" parent="PanelContainer/Layout/ContentArea" unique_id=845867271]
+anchors_preset = 0
+offset_top = -4.0
+offset_bottom = -4.0
+
+[node name="PrestigePanel" type="Control" parent="PanelContainer/Layout/ContentArea" unique_id=738723272]
+anchors_preset = 0
+offset_top = -4.0
+offset_bottom = -4.0
+
+[node name="UpgradePanel" parent="PanelContainer/Layout/ContentArea" unique_id=524373658 instance=ExtResource("2_hjueh")]
+layout_mode = 0
+
+[node name="QuitButton" type="Button" parent="." unique_id=838954623]
+custom_minimum_size = Vector2(34, 34)
+offset_left = 1216.0
+offset_top = 676.0
+offset_right = 1278.0
+offset_bottom = 720.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Quit"
+
+[node name="ReturnButton" type="Button" parent="." unique_id=1514909042]
+anchors_preset = -1
+anchor_right = 0.003
+offset_left = 4.0
+offset_top = 685.0
+offset_right = 35.16
+offset_bottom = 717.0
+text = "X"
+
+[connection signal="pressed" from="PanelContainer/Layout/NavRow/UpgradeButton" to="." method="_on_upgrade_button_pressed"]
+[connection signal="pressed" from="PanelContainer/Layout/NavRow/TokenButton" to="." method="_on_token_button_pressed"]
+[connection signal="pressed" from="PanelContainer/Layout/NavRow/PrestigeButton" to="." method="_on_prestige_button_pressed"]
+[connection signal="pressed" from="QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="ReturnButton" to="." method="_on_return_button_pressed"]

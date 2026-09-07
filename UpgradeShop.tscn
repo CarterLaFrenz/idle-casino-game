@@ -1,8 +1,11 @@
 [gd_scene format=3 uid="uid://sy4v1g3ervsp"]
 
+[ext_resource type="Script" uid="uid://c7ut5p33ebv27" path="res://upgrade_shop.gd" id="1_hp2nd"]
+
 [node name="UpgradeShop" type="Panel" unique_id=524373658]
 offset_right = 40.0
 offset_bottom = 40.0
+script = ExtResource("1_hp2nd")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1948015087]
 layout_mode = 0
